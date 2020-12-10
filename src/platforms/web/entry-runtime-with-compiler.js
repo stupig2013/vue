@@ -18,7 +18,7 @@ const mount = Vue.prototype.$mount
 Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
-): Component {
+): Component {console.log('$mount')
   el = el && query(el)
 
   /* istanbul ignore if */

@@ -12,8 +12,8 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 
 let uid = 0
 
-export function initMixin (Vue: Class<Component>) {console.log('init')
-  Vue.prototype._init = function (options?: Object) {
+export function initMixin (Vue: Class<Component>) {
+  Vue.prototype._init = function (options?: Object) {console.log('_init')
     const vm: Component = this
     // a uid
     vm._uid = uid++

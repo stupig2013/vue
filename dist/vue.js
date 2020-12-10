@@ -753,6 +753,16 @@
   var targetStack = [];
 
   function pushTarget (target) {
+    var callerName;
+    try { throw new Error(); }
+    catch (e) { 
+        var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+        re.exec(st), m = re.exec(st);
+        callerName = m[1] || m[2];
+    }
+    console.log(("callerName: " + callerName));
+    console.log(target);
+
     targetStack.push(target);
     Dep.target = target;
   }
@@ -4213,7 +4223,7 @@
     }
   }
 
-  function callHook (vm, hook) {
+  function callHook (vm, hook) {console.log(("callHook: " + hook));
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4479,6 +4489,7 @@
     var vm = this.vm;
     try {
       value = this.getter.call(vm, vm);
+      console.log(("value: " + value));
     } catch (e) {
       if (this.user) {
         handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
@@ -4960,8 +4971,8 @@
 
   var uid$3 = 0;
 
-  function initMixin (Vue) {console.log('init');
-    Vue.prototype._init = function (options) {
+  function initMixin (Vue) {
+    Vue.prototype._init = function (options) {console.log('_init');
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -9042,7 +9053,7 @@
   Vue.prototype.$mount = function (
     el,
     hydrating
-  ) {
+  ) {console.log('public $mount');
     el = el && inBrowser ? query(el) : undefined;
     return mountComponent(this, el, hydrating)
   };
@@ -11881,7 +11892,7 @@
   Vue.prototype.$mount = function (
     el,
     hydrating
-  ) {
+  ) {console.log('$mount');
     el = el && query(el);
 
     /* istanbul ignore if */
