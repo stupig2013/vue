@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -753,15 +753,15 @@
   var targetStack = [];
 
   function pushTarget (target) {
-    var callerName;
-    try { throw new Error(); }
-    catch (e) { 
-        var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
-        re.exec(st), m = re.exec(st);
-        callerName = m[1] || m[2];
-    }
-    console.log(("callerName: " + callerName));
-    console.log(target);
+    // var callerName;
+    // try { throw new Error(); }
+    // catch (e) { 
+    //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+    //     re.exec(st), m = re.exec(st);
+    //     callerName = m[1] || m[2];
+    // }
+    // console.log(`callerName: ${callerName}`);
+    // console.log(target)
 
     targetStack.push(target);
     Dep.target = target;
@@ -4223,7 +4223,8 @@
     }
   }
 
-  function callHook (vm, hook) {console.log(("callHook: " + hook));
+  function callHook (vm, hook) {
+    console.log(("callHook: " + hook));
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4438,6 +4439,8 @@
   ) {
     this.vm = vm;
     if (isRenderWatcher) {
+      console.log('init render watcher');
+      console.log(vm);
       vm._watcher = this;
     }
     vm._watchers.push(this);
@@ -4505,6 +4508,10 @@
       popTarget();
       this.cleanupDeps();
     }
+      
+    console.log(this.getter);
+    console.log(("get: " + value));
+
     return value
   };
 
@@ -4972,7 +4979,18 @@
   var uid$3 = 0;
 
   function initMixin (Vue) {
-    Vue.prototype._init = function (options) {console.log('_init');
+    Vue.prototype._init = function (options) {
+      console.log('Vue.prototype._init');
+
+      // var callerName;
+      // try { throw new Error(); }
+      // catch (e) { 
+      //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+      //     re.exec(st), m = re.exec(st);
+      //     callerName = m[1] || m[2];
+      // }
+      // console.log(`callerName: ${callerName}`);
+
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -9053,7 +9071,9 @@
   Vue.prototype.$mount = function (
     el,
     hydrating
-  ) {console.log('public $mount');
+  ) {
+    console.log('web runtime $mount');
+
     el = el && inBrowser ? query(el) : undefined;
     return mountComponent(this, el, hydrating)
   };
@@ -11892,7 +11912,9 @@
   Vue.prototype.$mount = function (
     el,
     hydrating
-  ) {console.log('$mount');
+  ) {
+    console.log('entry-runtime-with-compiler $mount');
+
     el = el && query(el);
 
     /* istanbul ignore if */

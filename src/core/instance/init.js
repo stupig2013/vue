@@ -13,7 +13,18 @@ import { extend, mergeOptions, formatComponentName } from '../util/index'
 let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
-  Vue.prototype._init = function (options?: Object) {console.log('_init')
+  Vue.prototype._init = function (options?: Object) {
+    console.log('Vue.prototype._init')
+
+    // var callerName;
+    // try { throw new Error(); }
+    // catch (e) { 
+    //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+    //     re.exec(st), m = re.exec(st);
+    //     callerName = m[1] || m[2];
+    // }
+    // console.log(`callerName: ${callerName}`);
+
     const vm: Component = this
     // a uid
     vm._uid = uid++

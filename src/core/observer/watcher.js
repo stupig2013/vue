@@ -51,6 +51,8 @@ export default class Watcher {
   ) {
     this.vm = vm
     if (isRenderWatcher) {
+      console.log('init render watcher')
+      console.log(vm)
       vm._watcher = this
     }
     vm._watchers.push(this)
@@ -120,6 +122,10 @@ export default class Watcher {
       popTarget()
       this.cleanupDeps()
     }
+    
+    console.log(this.getter)
+    console.log(`get: ${value}`)
+
     return value
   }
 
