@@ -9,30 +9,45 @@
   <body>
     <!-- app -->
     <div id="app">
-      <div v-if="typeof name === 'string'">{{name}}</div>
-      <div v-else>{{name.a}}</div>
+      <h4>Vue</h4>
+      <div>data.name: {{name}}</div>
       
-      <button @click="changeType">change type of name</button>
-      <button @click="modifyName">name.a + 1</button>
+      <button @click="modifyName">name + 1</button>
 
-      <my-component />
+      <my-component :name='name' />
     </div>
 
     <script>
       Vue.component('my-component', {
+        props: {
+          name: {
+            type: Number,
+            default: 0
+          }
+        },
         data: function () {
           return {
             count: 0
           }
         },
-        template: '<div>22222:{{count}}</div>'
+        methods: {
+          add() {
+            this.count += 1
+          }
+        },
+        template:  `<div>
+          <h5>my-component</h5>
+          <div>data.count: {{count}}</div>
+          <div>prop.name: {{name}}</div>
+          <button @click='add'>count + 1</button>
+        </div>`
       });
 
       // start app
       new Vue({
         el: '#app',
         data: {
-          name: 'name1',
+          name: 0,
         },
 
         computed: {
@@ -42,12 +57,8 @@
         },
 
         methods: {
-          changeType() {
-            this.name = {a: 1}
-          },
-
           modifyName() {
-            this.name.a += 1
+            this.name += 1
           }
         }
       })

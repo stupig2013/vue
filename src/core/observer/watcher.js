@@ -106,7 +106,6 @@ export default class Watcher {
     const vm = this.vm
     try {
       value = this.getter.call(vm, vm)
-      console.log(`value: ${value}`)
     } catch (e) {
       if (this.user) {
         handleError(e, vm, `getter for watcher "${this.expression}"`)
@@ -123,8 +122,8 @@ export default class Watcher {
       this.cleanupDeps()
     }
     
-    console.log(this.getter)
-    console.log(`get: ${value}`)
+    // console.log(this.getter)
+    console.log(`${vm.$vnode ? vm.$vnode.tag : 'vue'} get value: ${value}`)
 
     return value
   }
@@ -185,6 +184,7 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      console.log(`watcher ${this.id} run`)
       const value = this.get()
       if (
         value !== this.value ||

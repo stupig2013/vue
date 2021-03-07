@@ -1077,6 +1077,7 @@
           val = newVal;
         }
         childOb = !shallow && observe(newVal);
+        console.log(("dep \"" + key + "\" notify"));
         dep.notify();
       }
     });
@@ -3955,9 +3956,11 @@
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
       if (!prevVnode) {
+        console.log(1111111);
         // initial render
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
       } else {
+        console.log(2222222);
         // updates
         vm.$el = vm.__patch__(prevVnode, vnode);
       }
@@ -4492,7 +4495,6 @@
     var vm = this.vm;
     try {
       value = this.getter.call(vm, vm);
-      console.log(("value: " + value));
     } catch (e) {
       if (this.user) {
         handleError(e, vm, ("getter for watcher \"" + (this.expression) + "\""));
@@ -4509,8 +4511,8 @@
       this.cleanupDeps();
     }
       
-    console.log(this.getter);
-    console.log(("get: " + value));
+    // console.log(this.getter)
+    console.log(((vm.$vnode ? vm.$vnode.tag : 'vue') + " get value: " + value));
 
     return value
   };
@@ -4571,6 +4573,7 @@
    */
   Watcher.prototype.run = function run () {
     if (this.active) {
+      console.log(("watcher " + (this.id) + " run"));
       var value = this.get();
       if (
         value !== this.value ||
@@ -5947,15 +5950,15 @@
         // associated DOM element for it.
         vnode = ownerArray[index] = cloneVNode(vnode);
       }
-
       vnode.isRootInsert = !nested; // for transition enter check
       if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
         return
       }
-
       var data = vnode.data;
       var children = vnode.children;
       var tag = vnode.tag;
+      console.log(("createElm: " + tag));
+      // console.log(vnode)
       if (isDef(tag)) {
         {
           if (data && data.pre) {
@@ -6343,6 +6346,7 @@
       }
       if (isUndef(vnode.text)) {
         if (isDef(oldCh) && isDef(ch)) {
+          console.log("update children");
           if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
         } else if (isDef(ch)) {
           {
@@ -6356,6 +6360,7 @@
           nodeOps.setTextContent(elm, '');
         }
       } else if (oldVnode.text !== vnode.text) {
+        console.log(("update text node: " + (oldVnode.text) + " -> " + (vnode.text)));
         nodeOps.setTextContent(elm, vnode.text);
       }
       if (isDef(data)) {
@@ -6537,6 +6542,8 @@
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
 
+          // console.log(6666666)
+          // console.log(vnode)
           // create new node
           createElm(
             vnode,
