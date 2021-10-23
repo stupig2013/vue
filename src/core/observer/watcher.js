@@ -75,6 +75,8 @@ export default class Watcher {
     this.expression = process.env.NODE_ENV !== 'production'
       ? expOrFn.toString()
       : ''
+    
+    console.log(`init watcher ${this.id}`)
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
@@ -119,6 +121,10 @@ export default class Watcher {
       popTarget()
       this.cleanupDeps()
     }
+    
+    // console.log(this.getter)
+    console.log(`${vm.$vnode ? vm.$vnode.tag : 'vue'} get value: ${value}`)
+
     return value
   }
 
@@ -178,6 +184,7 @@ export default class Watcher {
    */
   run () {
     if (this.active) {
+      console.log(`watcher ${this.id} run`)
       const value = this.get()
       if (
         value !== this.value ||

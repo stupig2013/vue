@@ -188,6 +188,7 @@ export function defineReactive (
         val = newVal
       }
       childOb = !shallow && observe(newVal)
+      console.log(`dep "${key}" notify`)
       dep.notify()
     }
   })

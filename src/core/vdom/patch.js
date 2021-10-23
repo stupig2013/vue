@@ -139,15 +139,15 @@ export function createPatchFunction (backend) {
       // associated DOM element for it.
       vnode = ownerArray[index] = cloneVNode(vnode)
     }
-
     vnode.isRootInsert = !nested // for transition enter check
     if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
       return
     }
-
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
+    // console.log(`createElm: ${tag}`)
+    // console.log(vnode)
     if (isDef(tag)) {
       if (process.env.NODE_ENV !== 'production') {
         if (data && data.pre) {
@@ -553,6 +553,7 @@ export function createPatchFunction (backend) {
     }
     if (isUndef(vnode.text)) {
       if (isDef(oldCh) && isDef(ch)) {
+        console.log(`update children`)
         if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
       } else if (isDef(ch)) {
         if (process.env.NODE_ENV !== 'production') {
@@ -566,6 +567,7 @@ export function createPatchFunction (backend) {
         nodeOps.setTextContent(elm, '')
       }
     } else if (oldVnode.text !== vnode.text) {
+      console.log(`update text node: ${oldVnode.text} -> ${vnode.text}`)
       nodeOps.setTextContent(elm, vnode.text)
     }
     if (isDef(data)) {
@@ -705,7 +707,6 @@ export function createPatchFunction (backend) {
 
     let isInitialPatch = false
     const insertedVnodeQueue = []
-
     if (isUndef(oldVnode)) {
       // empty mount (likely as component), create new root element
       isInitialPatch = true
@@ -747,6 +748,8 @@ export function createPatchFunction (backend) {
         const oldElm = oldVnode.elm
         const parentElm = nodeOps.parentNode(oldElm)
 
+        // console.log(6666666)
+        // console.log(vnode)
         // create new node
         createElm(
           vnode,

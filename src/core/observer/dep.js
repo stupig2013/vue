@@ -56,6 +56,16 @@ Dep.target = null
 const targetStack = []
 
 export function pushTarget (target: ?Watcher) {
+  // var callerName;
+  // try { throw new Error(); }
+  // catch (e) { 
+  //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+  //     re.exec(st), m = re.exec(st);
+  //     callerName = m[1] || m[2];
+  // }
+  // console.log(`callerName: ${callerName}`);
+  // console.log(target)
+
   targetStack.push(target)
   Dep.target = target
 }

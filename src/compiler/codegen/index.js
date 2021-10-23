@@ -91,6 +91,7 @@ export function genElement (el: ASTElement, state: CodegenState): string {
     for (let i = 0; i < state.transforms.length; i++) {
       code = state.transforms[i](el, code)
     }
+    // console.log('genElement:', code)
     return code
   }
 }

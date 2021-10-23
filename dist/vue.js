@@ -1,6 +1,6 @@
 /*!
  * Vue.js v2.6.12
- * (c) 2014-2020 Evan You
+ * (c) 2014-2021 Evan You
  * Released under the MIT License.
  */
 (function (global, factory) {
@@ -753,6 +753,16 @@
   var targetStack = [];
 
   function pushTarget (target) {
+    // var callerName;
+    // try { throw new Error(); }
+    // catch (e) { 
+    //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+    //     re.exec(st), m = re.exec(st);
+    //     callerName = m[1] || m[2];
+    // }
+    // console.log(`callerName: ${callerName}`);
+    // console.log(target)
+
     targetStack.push(target);
     Dep.target = target;
   }
@@ -1067,6 +1077,7 @@
           val = newVal;
         }
         childOb = !shallow && observe(newVal);
+        console.log(("dep \"" + key + "\" notify"));
         dep.notify();
       }
     });
@@ -3428,6 +3439,7 @@
         );
       } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
         // component
+        console.log((tag + " is component"));
         vnode = createComponent(Ctor, data, context, children, tag);
       } else {
         // unknown or unlisted namespaced elements
@@ -3551,7 +3563,9 @@
         // separately from one another. Nested component's render fns are called
         // when parent component is patched.
         currentRenderingInstance = vm;
+        console.log('_renderProxy', vm._renderProxy);
         vnode = render.call(vm._renderProxy, vm.$createElement);
+        console.log('vnode', vnode);
       } catch (e) {
         handleError(e, vm, "render");
         // return error render result,
@@ -3945,9 +3959,11 @@
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
       if (!prevVnode) {
+        console.log('no prevNode');
         // initial render
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
       } else {
+        console.log('has prevNode');
         // updates
         vm.$el = vm.__patch__(prevVnode, vnode);
       }
@@ -4214,6 +4230,7 @@
   }
 
   function callHook (vm, hook) {
+    console.log(("callHook: " + hook));
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];
@@ -4450,6 +4467,8 @@
     this.depIds = new _Set();
     this.newDepIds = new _Set();
     this.expression = expOrFn.toString();
+      
+    console.log(("init watcher " + (this.id)));
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn;
@@ -4494,6 +4513,10 @@
       popTarget();
       this.cleanupDeps();
     }
+      
+    // console.log(this.getter)
+    console.log(((vm.$vnode ? vm.$vnode.tag : 'vue') + " get value: " + value));
+
     return value
   };
 
@@ -4553,6 +4576,7 @@
    */
   Watcher.prototype.run = function run () {
     if (this.active) {
+      console.log(("watcher " + (this.id) + " run"));
       var value = this.get();
       if (
         value !== this.value ||
@@ -4960,8 +4984,23 @@
 
   var uid$3 = 0;
 
-  function initMixin (Vue) {console.log('init');
+  function initMixin (Vue) {
     Vue.prototype._init = function (options) {
+      console.log('Vue.prototype._init', options);
+
+      if (options._isComponent) {
+        throw new Error();
+        // var callerName;
+        // try { throw new Error(); }
+        // catch (e) { 
+        //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
+        //     re.exec(st), m = re.exec(st);
+        //     callerName = m[1] || m[2];
+        // }
+        // console.log(`callerName: ${callerName}`);
+      }
+      
+
       var vm = this;
       // a uid
       vm._uid = uid$3++;
@@ -5918,15 +5957,15 @@
         // associated DOM element for it.
         vnode = ownerArray[index] = cloneVNode(vnode);
       }
-
       vnode.isRootInsert = !nested; // for transition enter check
       if (createComponent(vnode, insertedVnodeQueue, parentElm, refElm)) {
         return
       }
-
       var data = vnode.data;
       var children = vnode.children;
       var tag = vnode.tag;
+      // console.log(`createElm: ${tag}`)
+      // console.log(vnode)
       if (isDef(tag)) {
         {
           if (data && data.pre) {
@@ -6314,6 +6353,7 @@
       }
       if (isUndef(vnode.text)) {
         if (isDef(oldCh) && isDef(ch)) {
+          console.log("update children");
           if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
         } else if (isDef(ch)) {
           {
@@ -6327,6 +6367,7 @@
           nodeOps.setTextContent(elm, '');
         }
       } else if (oldVnode.text !== vnode.text) {
+        console.log(("update text node: " + (oldVnode.text) + " -> " + (vnode.text)));
         nodeOps.setTextContent(elm, vnode.text);
       }
       if (isDef(data)) {
@@ -6466,7 +6507,6 @@
 
       var isInitialPatch = false;
       var insertedVnodeQueue = [];
-
       if (isUndef(oldVnode)) {
         // empty mount (likely as component), create new root element
         isInitialPatch = true;
@@ -6508,6 +6548,8 @@
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
 
+          // console.log(6666666)
+          // console.log(vnode)
           // create new node
           createElm(
             vnode,
@@ -9043,6 +9085,8 @@
     el,
     hydrating
   ) {
+    console.log('web runtime $mount');
+
     el = el && inBrowser ? query(el) : undefined;
     return mountComponent(this, el, hydrating)
   };
@@ -10983,6 +11027,7 @@
       for (var i = 0; i < state.transforms.length; i++) {
         code = state.transforms[i](el, code);
       }
+      // console.log('genElement:', code)
       return code
     }
   }
@@ -11728,6 +11773,7 @@
       // turn code into functions
       var res = {};
       var fnGenErrors = [];
+      console.log('compiled code\n', compiled.render);
       res.render = createFunction(compiled.render, fnGenErrors);
       res.staticRenderFns = compiled.staticRenderFns.map(function (code) {
         return createFunction(code, fnGenErrors)
@@ -11882,6 +11928,8 @@
     el,
     hydrating
   ) {
+    console.log('entry-runtime-with-compiler $mount');
+
     el = el && query(el);
 
     /* istanbul ignore if */
@@ -11920,6 +11968,7 @@
         template = getOuterHTML(el);
       }
       if (template) {
+        console.log('template', template);
         /* istanbul ignore if */
         if (config.performance && mark) {
           mark('compile');

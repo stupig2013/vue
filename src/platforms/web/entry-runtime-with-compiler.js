@@ -19,6 +19,8 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
+  console.log('entry-runtime-with-compiler $mount')
+
   el = el && query(el)
 
   /* istanbul ignore if */
@@ -57,6 +59,7 @@ Vue.prototype.$mount = function (
       template = getOuterHTML(el)
     }
     if (template) {
+      console.log('template', template)
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
