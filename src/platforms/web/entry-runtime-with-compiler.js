@@ -19,7 +19,7 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  console.log('entry-runtime-with-compiler $mount')
+  console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] $mount step1 (entry-runtime-with-compiler)`, this)
 
   el = el && query(el)
 
@@ -59,7 +59,7 @@ Vue.prototype.$mount = function (
       template = getOuterHTML(el)
     }
     if (template) {
-      console.log('template', template)
+      console.log(`compile template to 'render' function start\n`, template)
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {
         mark('compile')
@@ -74,6 +74,7 @@ Vue.prototype.$mount = function (
       }, this)
       options.render = render
       options.staticRenderFns = staticRenderFns
+      console.log(`'render' function compiled `)
 
       /* istanbul ignore if */
       if (process.env.NODE_ENV !== 'production' && config.performance && mark) {

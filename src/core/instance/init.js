@@ -14,10 +14,11 @@ let uid = 0
 
 export function initMixin (Vue: Class<Component>) {
   Vue.prototype._init = function (options?: Object) {
-    console.log('Vue.prototype._init', options)
+    console.log(`[${options._isComponent ? options._parentVnode.tag : 'Vue'}] init start (Vue.prototype._init)`, options)
 
     if (options._isComponent) {
-      throw new Error();
+      // throw new Error();
+
       // var callerName;
       // try { throw new Error(); }
       // catch (e) { 
@@ -83,6 +84,8 @@ export function initMixin (Vue: Class<Component>) {
     if (vm.$options.el) {
       vm.$mount(vm.$options.el)
     }
+
+    console.log(`[${options._isComponent ? options._parentVnode.tag : 'Vue'}] init end (Vue.prototype._init)`)
   }
 }
 

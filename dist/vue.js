@@ -3439,7 +3439,6 @@
         );
       } else if ((!data || !data.pre) && isDef(Ctor = resolveAsset(context.$options, 'components', tag))) {
         // component
-        console.log((tag + " is component"));
         vnode = createComponent(Ctor, data, context, children, tag);
       } else {
         // unknown or unlisted namespaced elements
@@ -3563,9 +3562,9 @@
         // separately from one another. Nested component's render fns are called
         // when parent component is patched.
         currentRenderingInstance = vm;
-        console.log('_renderProxy', vm._renderProxy);
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] render start"), vm._renderProxy);
         vnode = render.call(vm._renderProxy, vm.$createElement);
-        console.log('vnode', vnode);
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] render end"), vnode);
       } catch (e) {
         handleError(e, vm, "render");
         // return error render result,
@@ -3959,11 +3958,11 @@
       // Vue.prototype.__patch__ is injected in entry points
       // based on the rendering backend used.
       if (!prevVnode) {
-        console.log('no prevNode');
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ start (no prevNode)"));
         // initial render
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
       } else {
-        console.log('has prevNode');
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ end (has prevNode)"));
         // updates
         vm.$el = vm.__patch__(prevVnode, vnode);
       }
@@ -4566,6 +4565,7 @@
     } else if (this.sync) {
       this.run();
     } else {
+      console.log('queueWatcher');
       queueWatcher(this);
     }
   };
@@ -4986,19 +4986,9 @@
 
   function initMixin (Vue) {
     Vue.prototype._init = function (options) {
-      console.log('Vue.prototype._init', options);
+      console.log(("[" + (options._isComponent ? options._parentVnode.tag : 'Vue') + "] init start (Vue.prototype._init)"), options);
 
-      if (options._isComponent) {
-        throw new Error();
-        // var callerName;
-        // try { throw new Error(); }
-        // catch (e) { 
-        //     var re = /(\w+)@|at (\w+) \(/g, st = e.stack, m;
-        //     re.exec(st), m = re.exec(st);
-        //     callerName = m[1] || m[2];
-        // }
-        // console.log(`callerName: ${callerName}`);
-      }
+      if (options._isComponent) ;
       
 
       var vm = this;
@@ -5053,6 +5043,8 @@
       if (vm.$options.el) {
         vm.$mount(vm.$options.el);
       }
+
+      console.log(("[" + (options._isComponent ? options._parentVnode.tag : 'Vue') + "] init end (Vue.prototype._init)"));
     };
   }
 
@@ -5992,6 +5984,7 @@
           if (isDef(data)) {
             invokeCreateHooks(vnode, insertedVnodeQueue);
           }
+          console.log('insert', vnode.elm);
           insert(parentElm, vnode.elm, refElm);
         }
 
@@ -6012,6 +6005,7 @@
       if (isDef(i)) {
         var isReactivated = isDef(vnode.componentInstance) && i.keepAlive;
         if (isDef(i = i.hook) && isDef(i = i.init)) {
+          console.log("init component in patch (vdom/create-comonent componentVNodeHooks.init)", vnode);
           i(vnode, false /* hydrating */);
         }
         // after calling the init hook, if the vnode is a child component
@@ -6514,6 +6508,7 @@
       } else {
         var isRealElement = isDef(oldVnode.nodeType);
         if (!isRealElement && sameVnode(oldVnode, vnode)) {
+          console.log('patch vnode');
           // patch existing root node
           patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly);
         } else {
@@ -6548,8 +6543,6 @@
           var oldElm = oldVnode.elm;
           var parentElm = nodeOps.parentNode(oldElm);
 
-          // console.log(6666666)
-          // console.log(vnode)
           // create new node
           createElm(
             vnode,
@@ -9085,7 +9078,7 @@
     el,
     hydrating
   ) {
-    console.log('web runtime $mount');
+    console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] $mount step2 (web/runtime/index)"));
 
     el = el && inBrowser ? query(el) : undefined;
     return mountComponent(this, el, hydrating)
@@ -11928,7 +11921,7 @@
     el,
     hydrating
   ) {
-    console.log('entry-runtime-with-compiler $mount');
+    console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] $mount step1 (entry-runtime-with-compiler)"), this);
 
     el = el && query(el);
 
@@ -11968,7 +11961,7 @@
         template = getOuterHTML(el);
       }
       if (template) {
-        console.log('template', template);
+        console.log("compile template to 'render' function start\n", template);
         /* istanbul ignore if */
         if (config.performance && mark) {
           mark('compile');
@@ -11985,6 +11978,7 @@
         var staticRenderFns = ref.staticRenderFns;
         options.render = render;
         options.staticRenderFns = staticRenderFns;
+        console.log("'render' function compiled ");
 
         /* istanbul ignore if */
         if (config.performance && mark) {

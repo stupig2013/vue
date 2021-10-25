@@ -38,7 +38,7 @@ Vue.prototype.$mount = function (
   el?: string | Element,
   hydrating?: boolean
 ): Component {
-  console.log('web runtime $mount')
+  console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] $mount step2 (web/runtime/index)`)
 
   el = el && inBrowser ? query(el) : undefined
   return mountComponent(this, el, hydrating)

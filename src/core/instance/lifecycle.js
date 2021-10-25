@@ -65,11 +65,11 @@ export function lifecycleMixin (Vue: Class<Component>) {
     // Vue.prototype.__patch__ is injected in entry points
     // based on the rendering backend used.
     if (!prevVnode) {
-      console.log('no prevNode')
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ start (no prevNode)`)
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
     } else {
-      console.log('has prevNode')
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ end (has prevNode)`)
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
     }

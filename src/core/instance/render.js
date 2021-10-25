@@ -88,9 +88,9 @@ export function renderMixin (Vue: Class<Component>) {
       // separately from one another. Nested component's render fns are called
       // when parent component is patched.
       currentRenderingInstance = vm
-      console.log('_renderProxy', vm._renderProxy)
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] render start`, vm._renderProxy)
       vnode = render.call(vm._renderProxy, vm.$createElement)
-      console.log('vnode', vnode)
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] render end`, vnode)
     } catch (e) {
       handleError(e, vm, `render`)
       // return error render result,
