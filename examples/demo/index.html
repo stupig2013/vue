@@ -31,12 +31,16 @@
           }
         },
         methods: {
-          add() {
+          add(e) {
+            console.log('add', e)
             this.count += 1
             this.count += 1
+          },
+          print(e) {
+            console.log('print', e)
           }
         },
-        template:  `<div>
+        template:  `<div @click='print'>
           <h5>my-component</h5>
           <div>data.count: {{count}}</div>
           <div>prop.name: {{name}}</div>

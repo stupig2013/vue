@@ -213,7 +213,7 @@ export function createPatchFunction (backend) {
     if (isDef(i)) {
       const isReactivated = isDef(vnode.componentInstance) && i.keepAlive
       if (isDef(i = i.hook) && isDef(i = i.init)) {
-        console.log(`init component in patch (vdom/create-comonent componentVNodeHooks.init)`, vnode)
+        console.log(`init component [${vnode.text ? `textNode "${vnode.text}"` : vnode.tag}] in patch (vdom/create-comonent componentVNodeHooks.init)`, vnode)
         i(vnode, false /* hydrating */)
       }
       // after calling the init hook, if the vnode is a child component

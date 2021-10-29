@@ -44,6 +44,7 @@ const componentVNodeHooks = {
       const mountedNode: any = vnode // work around flow
       componentVNodeHooks.prepatch(mountedNode, mountedNode)
     } else {
+      console.log(`[${vnode.text ? `textNode "${vnode.text}"` : vnode.tag}] create componentInstance`)
       const child = vnode.componentInstance = createComponentInstanceForVnode(
         vnode,
         activeInstance
