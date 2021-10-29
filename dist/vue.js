@@ -1062,6 +1062,7 @@
       set: function reactiveSetter (newVal) {
         var value = getter ? getter.call(obj) : val;
         /* eslint-disable no-self-compare */
+        console.log(("[" + key + "] newVal " + (newVal === val ? '===' : '!==') + " val"), newVal, val);
         if (newVal === value || (newVal !== newVal && value !== value)) {
           return
         }
@@ -3433,6 +3434,7 @@
             context
           );
         }
+        
         vnode = new VNode(
           config.parsePlatformTagName(tag), data, children,
           undefined, undefined, context
@@ -3961,10 +3963,12 @@
         console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ start (no prevNode)"));
         // initial render
         vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */);
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ end (no prevNode)"));
       } else {
-        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ end (has prevNode)"));
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ start (has prevNode)"));
         // updates
         vm.$el = vm.__patch__(prevVnode, vnode);
+        console.log(("[" + (this.$options.el ? 'Vue' : this.$options._parentVnode.tag) + "] __patch__ end (no prevNode)"));
       }
       restoreActiveInstance();
       // update __vue__ reference
@@ -4117,6 +4121,7 @@
     {
       isUpdatingChildComponent = true;
     }
+    console.log(("[" + (parentVnode.text ? ("textNode \"" + (parentVnode.text) + "\"") : parentVnode.tag) + "] updateChildComponent"));
 
     // determine whether component has slot children
     // we need to do this before overwriting $options._renderChildren.
@@ -4467,7 +4472,7 @@
     this.newDepIds = new _Set();
     this.expression = expOrFn.toString();
       
-    console.log(("init watcher " + (this.id)));
+    console.log(("init [watcher " + (this.id) + "]"));
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn;
@@ -4565,7 +4570,7 @@
     } else if (this.sync) {
       this.run();
     } else {
-      console.log('queueWatcher');
+      console.log(("queueWatcher [watcher " + (this.id) + "]"));
       queueWatcher(this);
     }
   };
@@ -6335,20 +6340,29 @@
 
       var i;
       var data = vnode.data;
+
+      var _vnodename = "[" + (vnode.text ? ("textNode \"" + (vnode.text) + "\"") : vnode.tag) + "]";
+      var _action;
+
       if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+        console.log((_vnodename + " call prepatch hook"));
         i(oldVnode, vnode);
       }
 
       var oldCh = oldVnode.children;
       var ch = vnode.children;
+
       if (isDef(data) && isPatchable(vnode)) {
+        console.log(_action = _vnodename + " call update hooks from modules (oldVnode " + (oldVnode === vnode ? '===' : '!==') + " vnode)", vnode, oldVnode);
         for (i = 0; i < cbs.update.length; ++i) { cbs.update[i](oldVnode, vnode); }
         if (isDef(i = data.hook) && isDef(i = i.update)) { i(oldVnode, vnode); }
       }
       if (isUndef(vnode.text)) {
         if (isDef(oldCh) && isDef(ch)) {
-          console.log("update children");
-          if (oldCh !== ch) { updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly); }
+          if (oldCh !== ch) {
+            // console.log(_action = `${_vnodename} updateChildren`)
+            updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly);
+          }
         } else if (isDef(ch)) {
           {
             checkDuplicateKeys(ch);
@@ -6361,9 +6375,10 @@
           nodeOps.setTextContent(elm, '');
         }
       } else if (oldVnode.text !== vnode.text) {
-        console.log(("update text node: " + (oldVnode.text) + " -> " + (vnode.text)));
+        console.log(_action = _vnodename + " update textNode: " + (oldVnode.text) + " -> " + (vnode.text));
         nodeOps.setTextContent(elm, vnode.text);
       }
+
       if (isDef(data)) {
         if (isDef(i = data.hook) && isDef(i = i.postpatch)) { i(oldVnode, vnode); }
       }
@@ -6508,7 +6523,6 @@
       } else {
         var isRealElement = isDef(oldVnode.nodeType);
         if (!isRealElement && sameVnode(oldVnode, vnode)) {
-          console.log('patch vnode');
           // patch existing root node
           patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly);
         } else {

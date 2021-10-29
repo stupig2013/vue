@@ -76,7 +76,7 @@ export default class Watcher {
       ? expOrFn.toString()
       : ''
     
-    console.log(`init watcher ${this.id}`)
+    console.log(`init [watcher ${this.id}]`)
     // parse expression for getter
     if (typeof expOrFn === 'function') {
       this.getter = expOrFn
@@ -174,7 +174,7 @@ export default class Watcher {
     } else if (this.sync) {
       this.run()
     } else {
-      console.log('queueWatcher')
+      console.log(`queueWatcher [watcher ${this.id}]`)
       queueWatcher(this)
     }
   }

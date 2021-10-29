@@ -14,7 +14,7 @@
       
       <button @click="modifyName">name + 1</button>
 
-      <my-component :name='name' />
+      <my-component class="c1" :name='name' :a="name" />
     </div>
 
     <script>
@@ -32,6 +32,7 @@
         },
         methods: {
           add() {
+            this.count += 1
             this.count += 1
           }
         },

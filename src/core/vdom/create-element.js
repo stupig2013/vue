@@ -104,6 +104,7 @@ export function _createElement (
           context
         )
       }
+      
       vnode = new VNode(
         config.parsePlatformTagName(tag), data, children,
         undefined, undefined, context

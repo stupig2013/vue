@@ -543,20 +543,29 @@ export function createPatchFunction (backend) {
 
     let i
     const data = vnode.data
+
+    let _vnodename = `[${vnode.text ? `textNode "${vnode.text}"` : vnode.tag}]`
+    let _action
+
     if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+      console.log(`${_vnodename} call prepatch hook`)
       i(oldVnode, vnode)
     }
 
     const oldCh = oldVnode.children
     const ch = vnode.children
+
     if (isDef(data) && isPatchable(vnode)) {
+      console.log(_action = `${_vnodename} call update hooks from modules (oldVnode ${oldVnode === vnode ? '===' : '!=='} vnode)`, vnode, oldVnode)
       for (i = 0; i < cbs.update.length; ++i) cbs.update[i](oldVnode, vnode)
       if (isDef(i = data.hook) && isDef(i = i.update)) i(oldVnode, vnode)
     }
     if (isUndef(vnode.text)) {
       if (isDef(oldCh) && isDef(ch)) {
-        console.log(`update children`)
-        if (oldCh !== ch) updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
+        if (oldCh !== ch) {
+          // console.log(_action = `${_vnodename} updateChildren`)
+          updateChildren(elm, oldCh, ch, insertedVnodeQueue, removeOnly)
+        }
       } else if (isDef(ch)) {
         if (process.env.NODE_ENV !== 'production') {
           checkDuplicateKeys(ch)
@@ -569,9 +578,14 @@ export function createPatchFunction (backend) {
         nodeOps.setTextContent(elm, '')
       }
     } else if (oldVnode.text !== vnode.text) {
-      console.log(`update text node: ${oldVnode.text} -> ${vnode.text}`)
+      console.log(_action = `${_vnodename} update textNode: ${oldVnode.text} -> ${vnode.text}`)
       nodeOps.setTextContent(elm, vnode.text)
     }
+
+    if (!_action) {
+      // console.log(`${_vnodename} does not change`)
+    }
+
     if (isDef(data)) {
       if (isDef(i = data.hook) && isDef(i = i.postpatch)) i(oldVnode, vnode)
     }
@@ -716,7 +730,6 @@ export function createPatchFunction (backend) {
     } else {
       const isRealElement = isDef(oldVnode.nodeType)
       if (!isRealElement && sameVnode(oldVnode, vnode)) {
-        console.log('patch vnode')
         // patch existing root node
         patchVnode(oldVnode, vnode, insertedVnodeQueue, null, null, removeOnly)
       } else {

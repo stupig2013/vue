@@ -68,10 +68,12 @@ export function lifecycleMixin (Vue: Class<Component>) {
       console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ start (no prevNode)`)
       // initial render
       vm.$el = vm.__patch__(vm.$el, vnode, hydrating, false /* removeOnly */)
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ end (no prevNode)`)
     } else {
-      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ end (has prevNode)`)
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ start (has prevNode)`)
       // updates
       vm.$el = vm.__patch__(prevVnode, vnode)
+      console.log(`[${this.$options.el ? 'Vue' : this.$options._parentVnode.tag}] __patch__ end (no prevNode)`)
     }
     restoreActiveInstance()
     // update __vue__ reference
@@ -224,6 +226,7 @@ export function updateChildComponent (
   if (process.env.NODE_ENV !== 'production') {
     isUpdatingChildComponent = true
   }
+  console.log(`[${parentVnode.text ? `textNode "${parentVnode.text}"` : parentVnode.tag}] updateChildComponent`)
 
   // determine whether component has slot children
   // we need to do this before overwriting $options._renderChildren.

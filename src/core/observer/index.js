@@ -173,6 +173,7 @@ export function defineReactive (
     set: function reactiveSetter (newVal) {
       const value = getter ? getter.call(obj) : val
       /* eslint-disable no-self-compare */
+      console.log(`[${key}] newVal ${newVal === val ? '===' : '!=='} val`, newVal, val)
       if (newVal === value || (newVal !== newVal && value !== value)) {
         return
       }
