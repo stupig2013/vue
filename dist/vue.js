@@ -4235,7 +4235,7 @@
   }
 
   function callHook (vm, hook) {
-    console.log(("callHook: " + hook));
+    console.log(("[" + (vm.$vnode ? vm.$vnode.tag : 'Vue') + "] callHook: " + hook));
     // #7573 disable dep collection when invoking lifecycle hooks
     pushTarget();
     var handlers = vm.$options[hook];

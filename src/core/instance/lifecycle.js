@@ -339,7 +339,7 @@ export function deactivateChildComponent (vm: Component, direct?: boolean) {
 }
 
 export function callHook (vm: Component, hook: string) {
-  console.log(`callHook: ${hook}`)
+  console.log(`[${vm.$vnode ? vm.$vnode.tag : 'Vue'}] callHook: ${hook}`)
   // #7573 disable dep collection when invoking lifecycle hooks
   pushTarget()
   const handlers = vm.$options[hook]
