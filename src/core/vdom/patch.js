@@ -146,9 +146,9 @@ export function createPatchFunction (backend) {
     const data = vnode.data
     const children = vnode.children
     const tag = vnode.tag
-    // console.log(`createElm: ${tag}`)
-    // console.log(vnode)
+    
     if (isDef(tag)) {
+      console.log(`createElm <${tag}> start`)
       if (process.env.NODE_ENV !== 'production') {
         if (data && data.pre) {
           creatingElmInVPre++
@@ -192,7 +192,7 @@ export function createPatchFunction (backend) {
         if (isDef(data)) {
           invokeCreateHooks(vnode, insertedVnodeQueue)
         }
-        console.log('insert', vnode.elm)
+        console.log(`createElm </${tag}> end, insert`, vnode.elm, '->', parentElm)
         insert(parentElm, vnode.elm, refElm)
       }
 
@@ -203,6 +203,7 @@ export function createPatchFunction (backend) {
       vnode.elm = nodeOps.createComment(vnode.text)
       insert(parentElm, vnode.elm, refElm)
     } else {
+      console.log(`createElm <TextNode> "${vnode.text}"`)
       vnode.elm = nodeOps.createTextNode(vnode.text)
       insert(parentElm, vnode.elm, refElm)
     }
@@ -222,6 +223,7 @@ export function createPatchFunction (backend) {
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue)
+        console.log(`insert (deferred)`, vnode.elm, '->', parentElm)
         insert(parentElm, vnode.elm, refElm)
         if (isTrue(isReactivated)) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm)
@@ -238,6 +240,7 @@ export function createPatchFunction (backend) {
     }
     vnode.elm = vnode.componentInstance.$el
     if (isPatchable(vnode)) {
+      console.log(`[${vnode.tag}] invokeCreateHooks`)
       invokeCreateHooks(vnode, insertedVnodeQueue)
       setScope(vnode)
     } else {
@@ -758,6 +761,7 @@ export function createPatchFunction (backend) {
           // either not server-rendered, or hydration failed.
           // create an empty node and replace it
           oldVnode = emptyNodeAt(oldVnode)
+          console.log('[Vue] init vnode', oldVnode)
         }
 
         // replacing existing element

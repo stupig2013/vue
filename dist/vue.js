@@ -5962,9 +5962,9 @@
       var data = vnode.data;
       var children = vnode.children;
       var tag = vnode.tag;
-      // console.log(`createElm: ${tag}`)
-      // console.log(vnode)
+      
       if (isDef(tag)) {
+        console.log(("createElm <" + tag + "> start"));
         {
           if (data && data.pre) {
             creatingElmInVPre++;
@@ -5990,7 +5990,7 @@
           if (isDef(data)) {
             invokeCreateHooks(vnode, insertedVnodeQueue);
           }
-          console.log('insert', vnode.elm);
+          console.log(("createElm </" + tag + "> end, insert"), vnode.elm, '->', parentElm);
           insert(parentElm, vnode.elm, refElm);
         }
 
@@ -6001,6 +6001,7 @@
         vnode.elm = nodeOps.createComment(vnode.text);
         insert(parentElm, vnode.elm, refElm);
       } else {
+        console.log(("createElm <TextNode> \"" + (vnode.text) + "\""));
         vnode.elm = nodeOps.createTextNode(vnode.text);
         insert(parentElm, vnode.elm, refElm);
       }
@@ -6020,6 +6021,7 @@
         // in that case we can just return the element and be done.
         if (isDef(vnode.componentInstance)) {
           initComponent(vnode, insertedVnodeQueue);
+          console.log("insert (deferred)", vnode.elm, '->', parentElm);
           insert(parentElm, vnode.elm, refElm);
           if (isTrue(isReactivated)) {
             reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);
@@ -6036,6 +6038,7 @@
       }
       vnode.elm = vnode.componentInstance.$el;
       if (isPatchable(vnode)) {
+        console.log(("[" + (vnode.tag) + "] invokeCreateHooks"));
         invokeCreateHooks(vnode, insertedVnodeQueue);
         setScope(vnode);
       } else {
@@ -6552,6 +6555,7 @@
             // either not server-rendered, or hydration failed.
             // create an empty node and replace it
             oldVnode = emptyNodeAt(oldVnode);
+            console.log('[Vue] init vnode', oldVnode);
           }
 
           // replacing existing element
